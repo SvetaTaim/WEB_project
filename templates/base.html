@@ -3,6 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link href="static/style/style.css" rel="stylesheet">
     <link rel="stylesheet"
           href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
           integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
@@ -10,6 +11,38 @@
     <title>{{title}}</title>
 </head>
 <body>
+<main>
+    <div class="container-fluid">
+        <header class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between border-bottom">
+            <img src="/static/img/icon.png" alt="здесь должна была быть картинка, но не нашлась">
+            <ul class="nav justify-content-center">
+                <li><a href="#" class="nav-link">Главная</a></li>
+                <li><a href="#" class="nav-link">О нас</a></li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button"
+                       aria-haspopup="true" aria-expanded="false">Категории</a>
+                    <div class="dropdown-menu">
+                        <a class="dropdown-item" href="#">Розыгрыши</a>
+                        <a class="dropdown-item" href="#">Съедобные</a>
+                        <a class="dropdown-item" href="#">Взрывы и фейверки</a>
+                        <a class="dropdown-item" href="#">Товары для девочек</a>
+                        <a class="dropdown-item" href="#">Безопасность</a>
+                        <a class="dropdown-item" href="#">Другое</a>
+                    </div>
+                </li>
+                <li><a href="#" class="nav-link">Контакты</a></li>
+            </ul>
+            <div class="form-group">
+                <input type="search" class="form1" id="Search" placeholder="Поиск...">
+            </div>
 
+            <div class="text-end">
+                <button type="button" class="b1">Войти</button>
+                <button type="button" class="b1">Регистрация</button>
+            </div>
+        </header>
+    </div>
+</main>
+{% block content %}{% endblock %}
 </body>
 </html>
