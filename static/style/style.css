@@ -16,3 +16,18 @@
     background-color: #ffffff;
     border-radius: 5px;
 }
+.picture-right{
+    float: right;
+    margin: 7px 7px 7px 7px;
+   }
+.purple-text{
+    color: #510B6F;
+    margin: 7px 7px 7px 7px;
+}
+.back{
+    background-color: #D9F5FC;
+}
+.orange-text{
+    color: #ff9000;
+    margin: 7px 7px 7px 7px;
+}
