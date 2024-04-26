@@ -6,8 +6,8 @@
     color: #510B6F;
     font-size: 20pt;
     border-color: #510B6F;
-    background-color: #ffffff;
     border-radius: 5px;
+    margin: 7px 7px 7px 7px;
 }
 .b1{
     color: #510B6F;
@@ -15,6 +15,8 @@
     border-color: #510B6F;
     background-color: #ffffff;
     border-radius: 5px;
+    margin: 7px 7px 7px 7px;
+
 }
 .b1-block{
     color: #ffffff;
@@ -22,6 +24,7 @@
     border-color: #510B6F;
     background-color: #510B6F;
     border-radius: 5px;
+    margin: 7px 7px 7px 7px;
 }
 .picture-right{
     float: right;

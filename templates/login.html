@@ -1,10 +1,12 @@
 {% extends 'base.html' %}
 
 {% block content%}
-<form action="/login" method="post" class="form-signin">
+<form action="/login" method="post" class="form1">
       <h1 class="purple-text">Вход</h1>
       <p class="purple-text"><label>Email: </label> <input type="text" name="email" value="" required /></p>
       <p class="purple-text"><label>Пароль: </label> <input type="password" name="psw" value="" required /></p>
       <button class="b1">Войти</button>
+      <hr align=left width="300px" color="#510B6F">
+      <p ><a class="purple-text" href="{{url_for('register')}}">Регистрация</a></p>
     </form>
 {% endblock%}

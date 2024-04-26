@@ -18,10 +18,26 @@ def about():
 def login():
     return render_template('login.html', title='Вход')
 
+
+@app.route('/register')
+def register():
+    return render_template('register.html', title='Регистрация')
+
+
 @app.route('/<username>')
 def user(username):
     return render_template('user.html', title='Вход', name=username)
 
 
+@app.route('/contact')
+def contact():
+    return render_template('contact.html', title='Контакты')
+
+
+@app.route('/category')
+def category():
+    return render_template('category.html', title='Категории')
+
+
 if __name__ == '__main__':
-    app.run(port=8080, host='127.0.0.1', debug=True)
+    app.run(port=8080, host='127.0.0.1')
