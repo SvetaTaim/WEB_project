@@ -20,8 +20,13 @@
                 <li><a href="/about" class="nav-link">О нас</a></li>
                 <li><a href="/catalog" class="nav-link">Каталог</a></li>
                 <li><a href="/contact" class="nav-link">Контакты</a></li>
-                <li><a href="/login" class="nav-link">Войти</a></li>
-                <li><a href="/register" class="nav-link">Регистрация</a></li>
+                {% if current_user.is_authenticated %}
+                    <li><a href="/account" class="nav-link">Аккаунт</a></li>
+                    <li><a href="/exit" class="nav-link">Выйти</a></li>
+                {% else %}
+                    <li><a href="/login" class="nav-link">Войти</a></li>
+                    <li><a href="/register" class="nav-link">Регистрация</a></li>
+                {% endif %}
             </ul>
             <div class="form-group">
                 <input type="search" class="form1" id="Search" placeholder="Поиск...">

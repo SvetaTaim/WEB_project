@@ -4,7 +4,7 @@ from data.users import association_table
 from data.users import User
 from data.products import Product
 from forms.user import RegisterForm, LoginForm
-from flask_login import LoginManager, login_user
+from flask_login import LoginManager, login_user, login_required ,logout_user
 
 
 app = Flask(__name__)
@@ -39,11 +39,20 @@ def login():
         db_sess = db_session.create_session()
         user = db_sess.query(User).filter(User.email == form.email.data).first()
         if user and user.check_password(form.password.data):
+            login_user(user, remember=form.remember_me.data)
             return redirect("/home")
         return render_template('login.html',
                                message="Неправильный логин или пароль",
                                form=form)
     return render_template('login.html', title='Вход', form=form)
+
+
+@app.route('/exit')
+@login_required
+def exit():
+    logout_user()
+    return redirect("/home")
+
 
 @app.route('/register', methods=['GET', 'POST'])
 def reqister():
