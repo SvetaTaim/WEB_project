@@ -1,8 +1,6 @@
 from flask import Flask, render_template, redirect, url_for
 from data import db_session
-from data.users import association_table
 from data.users import User
-from data.category import Category
 from data.products import Products
 from forms.user import RegisterForm, LoginForm
 from flask_login import LoginManager, login_user, login_required ,logout_user
@@ -12,7 +10,7 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
 login_manager = LoginManager()
 login_manager.init_app(app)
-
+category = [('Розыгрыши', 'fun'), ('Съедобные', 'eat'), ('Взрывы, фейерверки', 'bang'), ('Товары для девочек', 'girl'), ('Безопасность', 'safe'), ('Другое', 'another')]
 @login_manager.user_loader
 def load_user(user_id):
     db_sess = db_session.create_session()
@@ -95,9 +93,23 @@ def contact():
 def catalog():
     db_sess = db_session.create_session()
     products = db_sess.query(Products)
-    category = db_sess.query(Category)
     return render_template('catalog.html', title='Каталог', products=products, category=category)
 
+
+@app.route('/catalog/<name>')
+def catalog_new(name):
+    db_sess = db_session.create_session()
+    products = db_sess.query(Products)
+    product1 = list()
+    c = ''
+    for i in category:
+        if i[1] == name:
+            c = i[0]
+            break
+    for i in products:
+        if category[i.category - 1][0] == c:
+            product1.append(i)
+    return render_template('catalog.html', name=name, title=c, products=product1, category=category)
 
 if __name__ == '__main__':
     db_session.global_init("db/shop.db")

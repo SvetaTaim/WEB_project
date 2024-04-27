@@ -14,6 +14,5 @@ class Products(SqlAlchemyBase):
     photos = sqlalchemy.Column(sqlalchemy.String, nullable=True)
     cost = sqlalchemy.Column(sqlalchemy.Integer, nullable=True)
     created_date = sqlalchemy.Column(sqlalchemy.DateTime, default=datetime.datetime.now)
-    category_id = sqlalchemy.Column(sqlalchemy.Integer, sqlalchemy.ForeignKey("category.id"))
-    category = orm.relationship('Category')
+    category = sqlalchemy.Column(sqlalchemy.String, sqlalchemy.ForeignKey("category.id"))
     users = orm.relationship("User", secondary="association", backref="users")

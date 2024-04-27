@@ -9,6 +9,12 @@
     border-radius: 5px;
     margin: 7px 7px 7px 7px;
 }
+.container1{
+    width: 350px;
+    border: 2px solid;
+    padding: 8px 12px;
+    margin: 7px 7px 7px 7px;
+ }
 .b1{
     color: #510B6F;
     font-size: 20pt;

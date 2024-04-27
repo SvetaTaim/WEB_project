@@ -1,14 +1,21 @@
 {% extends 'base.html' %}
 
 {% block content%}
-<h1 class="orange-text">Каталог</h1>
+<h1 class="orange-text">{{ title }}</h1>
+<ul class="nav justify-content-center">
+    {% for item in category%}
+    <li><a href=/catalog/{{ item[1] }} class="nav-link">{{item[0]}}</a></li>
+    {% endfor %}
+</ul>
 {% for item in products%}
-<form>
+<div class="container1">
     {% if item.photos %}
-        <a><img src={{ url_for('static', filename=item.photos.split(';')[0])}} alt="здесь должна была быть картинка, но не нашлась"></a>
+    <a><img width="300" height="200" src={{ url_for('static', filename=item.photos.split(';')[0])}} alt="здесь
+        должна была быть картинка, но не нашлась"></a>
     {% endif %}
-    <h3>{{item.title}}</h3>
-    <h4>{{item.cost}}</h4>
-</form>
+    <li class="nav"><a href=#{{ item.id }} class="nav-link"><h3>{{item.title}}</h3></a></li>
+    <h4 class="purple-text">Цена: {{item.cost}} руб.</h4>
+</div>
+
 {% endfor %}
 {% endblock%}
