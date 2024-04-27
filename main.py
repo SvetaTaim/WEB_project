@@ -13,10 +13,12 @@ login_manager.init_app(app)
 category = [('Розыгрыши', 'fun'), ('Съедобные', 'eat'), ('Взрывы, фейерверки', 'bang'), ('Товары для девочек', 'girl'), ('Безопасность', 'safe'), ('Другое', 'another')]
 basket = []
 
+
 @login_manager.user_loader
 def load_user(user_id):
     db_sess = db_session.create_session()
     return db_sess.query(User).get(user_id)
+
 
 
 @app.route('/')
@@ -116,35 +118,24 @@ def catalog_new(name):
     return render_template('catalog.html', name=name, title=c, products=product1, category=category)
 
 
-@app.route('/buy/<name>')
 def buy(name):
-    pass
-    """product, way = name.split('#')
+    product, way = name.split('#')
     db_sess = db_session.create_session()
     products = db_sess.query(Products)
     basket.append(products[int(product) - 1])
-    return catalog_new(way)"""
+    return catalog_new(way)
 
 
-@app.route('/product/<title>')
-def product(title):
+@app.route('/product/<id>')
+def product(id):
     db_sess = db_session.create_session()
-    products = db_sess.query(Products)
-    product = ''
-    for i in products:
-        if i.title == title:
-            product = i
-            break
-    title1 = product.title
-    photos = product.photos
-    cost = product.cost
-    des = product.description
-    id = product.id
-    return render_template('product.html', id=id, title=title1, photos=photos, cost=cost, des=des)
+    product = db_sess.query(Products).get(id)
+    return render_template('product.html', product=product)
 
 
 
 if __name__ == '__main__':
     db_session.global_init("db/shop.db")
     app.run(port=8000, host='127.0.0.1')
+
 

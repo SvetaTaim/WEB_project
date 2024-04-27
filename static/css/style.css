@@ -11,6 +11,7 @@
 }
 .container1{
     width: 350px;
+    height: 450px;
     border: 2px solid;
     padding: 8px 12px;
     margin: 7px 7px 7px 7px;
@@ -45,5 +46,16 @@
 }
 .orange-text{
     color: #ff9000;
+    margin: 7px 7px 7px 7px;
+}
+.big-text{
+    color: #510B6F;
+    font-size: 40pt;
+    margin: 7px 7px 7px 7px;
+}
+.big-container{
+    border: 5px solid #E2081B;
+    background-color: #9CEB6F;
+    padding: 8px 12px;
     margin: 7px 7px 7px 7px;
 }
