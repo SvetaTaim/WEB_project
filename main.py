@@ -11,6 +11,8 @@ app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
 login_manager = LoginManager()
 login_manager.init_app(app)
 category = [('Розыгрыши', 'fun'), ('Съедобные', 'eat'), ('Взрывы, фейерверки', 'bang'), ('Товары для девочек', 'girl'), ('Безопасность', 'safe'), ('Другое', 'another')]
+basket = []
+
 @login_manager.user_loader
 def load_user(user_id):
     db_sess = db_session.create_session()
@@ -39,6 +41,7 @@ def login():
         user = db_sess.query(User).filter(User.email == form.email.data).first()
         if user and user.check_password(form.password.data):
             login_user(user, remember=form.remember_me.data)
+            basket.clear()
             return redirect("/home")
         return render_template('login.html',
                                message="Неправильный логин или пароль",
@@ -70,6 +73,7 @@ def reqister():
             name=form.name.data,
             email=form.email.data,
         )
+
         user.set_password(form.password.data)
         db_sess.add(user)
         db_sess.commit()
@@ -81,7 +85,7 @@ def reqister():
 def account():
     db_sess = db_session.create_session()
     products = db_sess.query(Products)
-    return render_template('account.html', title='Аккаунт', products=products)
+    return render_template('account.html', title='Аккаунт', products=products, basket=basket)
 
 
 @app.route('/contact')
@@ -110,6 +114,35 @@ def catalog_new(name):
         if category[i.category - 1][0] == c:
             product1.append(i)
     return render_template('catalog.html', name=name, title=c, products=product1, category=category)
+
+
+@app.route('/buy/<name>')
+def buy(name):
+    pass
+    """product, way = name.split('#')
+    db_sess = db_session.create_session()
+    products = db_sess.query(Products)
+    basket.append(products[int(product) - 1])
+    return catalog_new(way)"""
+
+
+@app.route('/product/<title>')
+def product(title):
+    db_sess = db_session.create_session()
+    products = db_sess.query(Products)
+    product = ''
+    for i in products:
+        if i.title == title:
+            product = i
+            break
+    title1 = product.title
+    photos = product.photos
+    cost = product.cost
+    des = product.description
+    id = product.id
+    return render_template('product.html', id=id, title=title1, photos=photos, cost=cost, des=des)
+
+
 
 if __name__ == '__main__':
     db_session.global_init("db/shop.db")

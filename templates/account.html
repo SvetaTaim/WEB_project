@@ -1,5 +1,13 @@
 {% extends 'base.html' %}
 
 {% block content%}
-
+<h1 class="orange-text">{{ title }}</h1>
+<h3 class="purple-text">Данные</h3>
+<p class="purple-text">Имя: {{current_user.name}}</p>
+<p class="purple-text">Логин: {{current_user.email}}</p>
+<p class="purple-text">Сменить пароль(пока нельзя)</p>
+<h3 class="purple-text">Моя корзина</h3>
+{% for item in basket%}
+<li class="nav"><a href=#{{ item }} class="nav-link"><h3>{{item}}</h3></a></li>
+{% endfor %}
 {% endblock%}

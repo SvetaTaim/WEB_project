@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block content%}
+<h1 class="orange-text">{{ title1 }}</h1>
+{% if photos %}
+    <a><img width="300" height="200" src={{ url_for('static', filename=photos.split(';')[0])}} alt="здесь
+        должна была быть картинка, но не нашлась"></a>
+    {% endif %}
+    <li class="nav"><a href=product/{{ title1 }} class="nav-link"><h3>{{title1}}</h3></a></li>
+    <h4 class="purple-text">Цена: {{cost}} руб.</h4>
+    {% if current_user.is_authenticated %}
+    <li class="nav"><a href=/buy/{{ id }} class="nav-link">В корзину</a></li>
+    {% endif %}
+{% endblock%}
