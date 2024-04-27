@@ -1,8 +1,9 @@
-from flask import Flask, render_template, redirect
+from flask import Flask, render_template, redirect, url_for
 from data import db_session
 from data.users import association_table
 from data.users import User
-from data.products import Product
+from data.category import Category
+from data.products import Products
 from forms.user import RegisterForm, LoginForm
 from flask_login import LoginManager, login_user, login_required ,logout_user
 
@@ -79,8 +80,10 @@ def reqister():
 
 
 @app.route('/account')
-def user(username):
-    return render_template('account.html', title='Аккаунт')
+def account():
+    db_sess = db_session.create_session()
+    products = db_sess.query(Products)
+    return render_template('account.html', title='Аккаунт', products=products)
 
 
 @app.route('/contact')
@@ -90,9 +93,13 @@ def contact():
 
 @app.route('/catalog')
 def catalog():
-    return render_template('catalog.html', title='Каталог')
+    db_sess = db_session.create_session()
+    products = db_sess.query(Products)
+    category = db_sess.query(Category)
+    return render_template('catalog.html', title='Каталог', products=products, category=category)
 
 
 if __name__ == '__main__':
     db_session.global_init("db/shop.db")
     app.run(port=8000, host='127.0.0.1')
+

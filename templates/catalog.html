@@ -1,4 +1,14 @@
 {% extends 'base.html' %}
 
 {% block content%}
+<h1 class="orange-text">Каталог</h1>
+{% for item in products%}
+<form>
+    {% if item.photos %}
+        <a><img src={{ url_for('static', filename=item.photos.split(';')[0])}} alt="здесь должна была быть картинка, но не нашлась"></a>
+    {% endif %}
+    <h3>{{item.title}}</h3>
+    <h4>{{item.cost}}</h4>
+</form>
+{% endfor %}
 {% endblock%}
