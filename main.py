@@ -3,14 +3,14 @@ from data import db_session
 from data.users import User
 from data.products import Products
 from forms.user import RegisterForm, LoginForm
-from flask_login import LoginManager, login_user, login_required ,logout_user
-
+from flask_login import LoginManager, login_user, login_required, logout_user
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
 login_manager = LoginManager()
 login_manager.init_app(app)
-category = [('Розыгрыши', 'fun'), ('Съедобные', 'eat'), ('Взрывы, фейерверки', 'bang'), ('Товары для девочек', 'girl'), ('Безопасность', 'safe'), ('Другое', 'another')]
+category = [('Розыгрыши', 'fun'), ('Съедобные', 'eat'), ('Взрывы, фейерверки', 'bang'), ('Товары для девочек', 'girl'),
+            ('Безопасность', 'safe'), ('Другое', 'another')]
 basket = []
 
 
@@ -20,10 +20,10 @@ def load_user(user_id):
     return db_sess.query(User).get(user_id)
 
 
-
 @app.route('/')
 def index():
     return redirect("/home")
+
 
 @app.route('/home')
 def home():
@@ -133,9 +133,6 @@ def product(id):
     return render_template('product.html', product=product)
 
 
-
 if __name__ == '__main__':
     db_session.global_init("db/shop.db")
     app.run(port=8000, host='127.0.0.1')
-
-

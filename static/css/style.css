@@ -9,7 +9,7 @@
     border-radius: 5px;
     margin: 7px 7px 7px 7px;
 }
-.container1{
+.container-product{
     width: 350px;
     height: 450px;
     border: 2px solid;
@@ -51,11 +51,15 @@
 .big-text{
     color: #510B6F;
     font-size: 40pt;
-    margin: 7px 7px 7px 7px;
 }
 .big-container{
     border: 5px solid #E2081B;
     background-color: #9CEB6F;
     padding: 8px 12px;
     margin: 7px 7px 7px 7px;
+}
+.container-photo{
+    width: 304px;
+    height: 204px;
+    border: 2px solid #510B6F;
 }
