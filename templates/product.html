@@ -2,7 +2,9 @@
 
 {% block content%}
 <h1 class="orange-text">{{ product.title }}</h1>
-{% if product.photos %}
+<form class="form1" action="" method="post">
+    {{ form.hidden_tag() }}
+    {% if product.photos %}
     <a><img width="300" height="200" src={{ url_for('static', filename=product.photos.split(';')[0])}} alt="здесь
         должна была быть картинка, но не нашлась"></a>
     {% endif %}
@@ -10,6 +12,9 @@
     <h4 class="purple-text">Цена: {{ product.cost }} руб.</h4>
     <p class="purple-text">{{ product.description }}</p>
     {% if current_user.is_authenticated %}
-    <li class="nav"><a href=/buy/{{ product.id }} class="nav-link">В корзину</a></li>
+    <p>{{ form.submit(type="submit", class="b1") }}</p>
+    {% else %}
+    <p class="purple-text">Войдите, чтобы заказать</p>
     {% endif %}
+</form>
 {% endblock%}

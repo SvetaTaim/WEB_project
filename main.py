@@ -2,7 +2,8 @@ from flask import Flask, render_template, redirect, url_for
 from data import db_session
 from data.users import User
 from data.products import Products
-from forms.user import RegisterForm, LoginForm
+from data.baskets import Basket
+from forms.user import RegisterForm, LoginForm, BuyForm
 from flask_login import LoginManager, login_user, login_required, logout_user
 
 app = Flask(__name__)
@@ -11,7 +12,8 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 category = [('Розыгрыши', 'fun'), ('Съедобные', 'eat'), ('Взрывы, фейерверки', 'bang'), ('Товары для девочек', 'girl'),
             ('Безопасность', 'safe'), ('Другое', 'another')]
-basket = []
+current_basket = []
+user_id = 0
 
 
 @login_manager.user_loader
@@ -43,7 +45,17 @@ def login():
         user = db_sess.query(User).filter(User.email == form.email.data).first()
         if user and user.check_password(form.password.data):
             login_user(user, remember=form.remember_me.data)
-            basket.clear()
+            basket = db_sess.query(Basket).filter(Basket.user_id == user.id).all()
+            for i in basket:
+                if not i.pay:
+                    break
+            else:
+                new_basket = Basket()
+                new_basket.user_id = user.id
+                db_sess.add(new_basket)
+                db_sess.commit()
+            global user_id
+            user_id = user.id
             return redirect("/home")
         return render_template('login.html',
                                message="Неправильный логин или пароль",
@@ -87,7 +99,7 @@ def reqister():
 def account():
     db_sess = db_session.create_session()
     products = db_sess.query(Products)
-    return render_template('account.html', title='Аккаунт', products=products, basket=basket)
+    return render_template('account.html', title='Аккаунт', products=products)
 
 
 @app.route('/contact')
@@ -113,24 +125,32 @@ def catalog_new(name):
             c = i[0]
             break
     for i in products:
-        if category[i.category - 1][0] == c:
+        if category[i.category_id - 1][0] == c:
             product1.append(i)
     return render_template('catalog.html', name=name, title=c, products=product1, category=category)
 
 
-def buy(name):
-    product, way = name.split('#')
+def buy(user_id, product_id):
     db_sess = db_session.create_session()
-    products = db_sess.query(Products)
-    basket.append(products[int(product) - 1])
-    return catalog_new(way)
+    new_basket = db_sess.query(Basket).filter(Basket.user_id == user_id and not Basket.pay).first()
+    if new_basket.composition:
+        basket_comp = new_basket.composition.split(',')
+        basket_comp.append(str(product_id))
+        new_basket.composition = ','.join(basket_comp)
+    else:
+        new_basket.composition = str(product_id)
+    db_sess.commit()
+    return redirect('/product/' + str(product_id))
 
 
-@app.route('/product/<id>')
+@app.route('/product/<id>', methods=['GET', 'POST'])
 def product(id):
+    form = BuyForm()
+    if form.validate_on_submit():
+        return buy(user_id, id)
     db_sess = db_session.create_session()
     product = db_sess.query(Products).get(id)
-    return render_template('product.html', product=product)
+    return render_template('product.html', product=product, title=product.title, form=form)
 
 
 if __name__ == '__main__':

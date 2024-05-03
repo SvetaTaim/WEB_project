@@ -20,9 +20,6 @@
             </div>
             <li class="nav"><a href=/product/{{ item.id }} class="nav-link"><h3>{{item.title}}</h3></a></li>
             <h4 class="purple-text">Цена: {{item.cost}} руб.</h4>
-            {% if current_user.is_authenticated %}
-            <li class="nav"><a href=/buy/{{ item.id }} class="nav-link">В корзину</a></li>
-            {% endif %}
         </div>
     </div>
     {% endfor %}
