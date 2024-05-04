@@ -5,6 +5,9 @@ from data.products import Products
 from data.baskets import Basket
 from forms.user import RegisterForm, LoginForm, BuyForm, PayForm
 from flask_login import LoginManager, login_user, login_required, logout_user
+import os
+import sys
+import requests
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
@@ -13,6 +16,17 @@ login_manager.init_app(app)
 category = [('Розыгрыши', 'fun'), ('Съедобные', 'eat'), ('Взрывы, фейерверки', 'bang'), ('Товары для девочек', 'girl'),
             ('Безопасность', 'safe'), ('Другое', 'another')]
 user_id = 0
+addresses = ['Bolshoy Znamensky Lane, 8к2', 'Khamovnichesky Val Street, 26']
+
+
+def get_coords(name):
+    geocoder_request = f"http://geocode-maps.yandex.ru/1.x/?apikey=40d1649f-0493-4b70-98ba-98533de7710b&geocode={name}&format=json"
+    geo_response = requests.get(geocoder_request)
+    if geo_response:
+        json_response = geo_response.json()
+        toponym = json_response["response"]["GeoObjectCollection"]["featureMember"][0]["GeoObject"]
+        coords = toponym["Point"]["pos"].replace(' ', ',')
+        return coords
 
 
 @login_manager.user_loader
@@ -139,11 +153,32 @@ def account():
             baskets_list.append((', '.join(products1), summa_basket1))
     if not baskets:
         baskets_list = None
-    return render_template('account.html', title='Аккаунт', baskets=baskets_list, current_basket=(products, str(summa_basket)), form=form)
+    return render_template('account.html', title='Аккаунт', baskets=baskets_list,
+                           current_basket=(products, str(summa_basket)), form=form)
 
 
 @app.route('/contact')
 def contact():
+    points = []
+    for i in addresses:
+        coord = get_coords(i)
+        points.append(coord + ',pm2bll')
+    map_params = {
+        "l": "map",
+        "pt": '~'.join(points)
+    }
+    map_api_server = "http://static-maps.yandex.ru/1.x/"
+    response = requests.get(map_api_server, params=map_params)
+
+    if not response:
+        print("Ошибка выполнения запроса:")
+        print(map_api_server)
+        print("Http статус:", response.status_code, "(", response.reason, ")")
+        sys.exit(1)
+
+    map_file = "static/map.png"
+    with open(map_file, "wb") as file:
+        file.write(response.content)
     return render_template('contact.html', title='Контакты')
 
 
@@ -193,8 +228,6 @@ def product(id):
     return render_template('product.html', product=product, title=product.title, form=form)
 
 
-
 if __name__ == '__main__':
     db_session.global_init("db/shop.db")
     app.run(port=8000, host='127.0.0.1')
-
