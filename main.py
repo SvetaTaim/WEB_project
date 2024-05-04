@@ -3,7 +3,7 @@ from data import db_session
 from data.users import User
 from data.products import Products
 from data.baskets import Basket
-from forms.user import RegisterForm, LoginForm, BuyForm
+from forms.user import RegisterForm, LoginForm, BuyForm, PayForm
 from flask_login import LoginManager, login_user, login_required, logout_user
 
 app = Flask(__name__)
@@ -12,7 +12,6 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 category = [('Розыгрыши', 'fun'), ('Съедобные', 'eat'), ('Взрывы, фейерверки', 'bang'), ('Товары для девочек', 'girl'),
             ('Безопасность', 'safe'), ('Другое', 'another')]
-current_basket = []
 user_id = 0
 
 
@@ -95,11 +94,52 @@ def reqister():
     return render_template('register.html', title='Регистрация', form=form)
 
 
-@app.route('/account')
-def account():
+def pay(user_id):
     db_sess = db_session.create_session()
-    products = db_sess.query(Products)
-    return render_template('account.html', title='Аккаунт', products=products)
+    basket = db_sess.query(Basket).filter(Basket.user_id == user_id, Basket.pay == 0).first()
+    if basket.composition:
+        basket.pay = True
+        new_basket = Basket()
+        new_basket.user_id = user_id
+        db_sess.add(new_basket)
+        db_sess.commit()
+    return redirect('/account')
+
+
+@app.route('/account', methods=['GET', 'POST'])
+def account():
+    form = PayForm()
+    if form.validate_on_submit():
+        return pay(user_id)
+
+    db_sess = db_session.create_session()
+    products = []
+
+    current_basket = db_sess.query(Basket).filter(Basket.user_id == user_id, Basket.pay == 0).first().composition
+    if current_basket:
+        busket_list = list(map(int, current_basket.split(',')))
+        summa_basket = 0
+        for i in busket_list:
+            products.append(db_sess.query(Products).filter(Products.id == i).first().title)
+            summa_basket += db_sess.query(Products).filter(Products.id == i).first().cost
+    else:
+        products.append('Корзина пока пуста, купите что-нибудь')
+        summa_basket = 0
+
+    baskets = db_sess.query(Basket).filter(Basket.user_id == user_id, Basket.pay == 1).all()
+    baskets_list = []
+    for i in baskets:
+        summa_basket1 = 0
+        products1 = []
+        if i.composition:
+            busket_list1 = list(map(int, i.composition.split(',')))
+            for j in busket_list1:
+                products1.append(db_sess.query(Products).filter(Products.id == j).first().title)
+                summa_basket1 += db_sess.query(Products).filter(Products.id == j).first().cost
+            baskets_list.append((', '.join(products1), summa_basket1))
+    if not baskets:
+        baskets_list = None
+    return render_template('account.html', title='Аккаунт', baskets=baskets_list, current_basket=(products, str(summa_basket)), form=form)
 
 
 @app.route('/contact')
@@ -132,7 +172,7 @@ def catalog_new(name):
 
 def buy(user_id, product_id):
     db_sess = db_session.create_session()
-    new_basket = db_sess.query(Basket).filter(Basket.user_id == user_id and not Basket.pay).first()
+    new_basket = db_sess.query(Basket).filter(Basket.user_id == user_id, Basket.pay == 0).first()
     if new_basket.composition:
         basket_comp = new_basket.composition.split(',')
         basket_comp.append(str(product_id))
@@ -151,6 +191,7 @@ def product(id):
     db_sess = db_session.create_session()
     product = db_sess.query(Products).get(id)
     return render_template('product.html', product=product, title=product.title, form=form)
+
 
 
 if __name__ == '__main__':

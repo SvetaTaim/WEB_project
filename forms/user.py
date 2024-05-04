@@ -20,3 +20,7 @@ class RegisterForm(FlaskForm):
 
 class BuyForm(FlaskForm):
     submit = SubmitField('В корзину')
+
+
+class PayForm(FlaskForm):
+    submit = SubmitField('Оплатить заказ')

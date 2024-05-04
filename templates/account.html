@@ -7,7 +7,25 @@
 <p class="purple-text">Логин: {{current_user.email}}</p>
 <p class="purple-text">Сменить пароль(пока нельзя)</p>
 <h3 class="purple-text">Моя корзина</h3>
-{% for item in basket%}
-<li class="nav"><a href=#{{ item }} class="nav-link"><h3>{{item}}</h3></a></li>
-{% endfor %}
+<ul class="list-group">
+    {% for item in current_basket[0] %}
+    <li class="list-group-item1">{{ item }}</li>
+    {% endfor %}
+</ul>
+<p class="purple-text">Сумма заказа: {{current_basket[1]}}</p>
+<form action="" method="post">
+    {{ form.hidden_tag() }}
+    <p>{{ form.submit(type="submit", class="b1") }}</p>
+</form>
+<h3 class="purple-text">История заказов</h3>
+<ul class="list-group">
+    {% if baskets %}
+    {% for i in baskets %}
+    <li class="list-group-item1">Товары: {{ i[0] }}; Сумма заказа: {{ i[1] }}</li>
+    {% endfor %}
+    {% else %}
+    <li class="list-group-item1">У вас пока нет оплаченных заказов</li>
+    {% endif %}
+</ul>
+
 {% endblock%}
